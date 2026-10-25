@@ -1,0 +1,6 @@
+interface:
+  display_name: "tomd"
+  short_description: "先将支持的附件转成 Markdown，再读取、总结和提取内容"
+  default_prompt: "使用 $tomd 将这些文件转换为 Markdown，检查结果后读取，并完成我的任务。"
+policy:
+  allow_implicit_invocation: true

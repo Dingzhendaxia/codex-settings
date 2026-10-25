@@ -1,0 +1,7 @@
+*.backup-*
+auth.json
+config.toml
+.env
+*.log
+node_modules/
+.test*/
