@@ -1,0 +1,8 @@
+# Template only: replace both absolute paths before merging into config.toml.
+# Preserve all existing configuration; merge an existing matlab section.
+[mcp_servers.matlab]
+command = 'C:\ABSOLUTE\AGENTIC_ROOT\bin\matlab-mcp-server.exe'
+args = ['--matlab-session-mode=existing', '--extension-file=C:\ABSOLUTE\AGENTIC_ROOT\toolkits\simulink-agentic-toolkit\tools\tools.json', '--disable-telemetry=true']
+env_vars = ['WINDIR']
+startup_timeout_sec = 120
+tool_timeout_sec = 600

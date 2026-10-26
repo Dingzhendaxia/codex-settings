@@ -1,6 +1,12 @@
-# Codex 技能包
+# Codex 配置与技能
 
-此仓库只收录本机自装的非 MATLAB 技能：`archify` 和 `tomd`。不包含 MATLAB/Simulink 工具包、MCP 配置、Codex 登录信息或密钥。
+此仓库收录本机自装技能 `archify`、`tomd`，以及 MATLAB / Simulink 与 Codex 的配置流程和模板。不包含官方工具包二进制、实际 Codex 用户配置、登录信息或密钥。
+
+## MATLAB / Simulink 与 Codex
+
+新增内容见 [MATLAB 配置指南](matlab/README.md)：固定版本安装、17 个核心技能注册、MCP existing 会话配置、startup 自动初始化与实际验收。
+
+本机 2026-10-26 已通过 MATLAB 代码执行和 Simulink 模型概览验收，详见[验收记录](matlab/VERIFICATION-2026-10-26.md)。
 
 ## 在另一台 Windows 电脑安装
 
