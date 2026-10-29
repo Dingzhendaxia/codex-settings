@@ -97,6 +97,32 @@ foreach ($name in $names) {
 
 ## 检查与更新
 
+### 一条命令同步 Archify 上游、本地和 GitHub
+
+Archify 作为上游开源技能包保留在本仓库中，本机通过目录联接或复制使用。自己的额外偏好放在包外；同步会替换整个 `skills/archify/`，保留上游许可及资源，不只替换 `SKILL.md`。
+
+在已登录 Git、能够推送本仓库的电脑上执行：
+
+```powershell
+pwsh -NoProfile -File "$HOME\codex-settings\skills\Sync-Archify.ps1"
+```
+
+脚本从自身位置识别仓库，无需先切换目录。默认获取 `tt-a1i/archify` 的 `main`，核对包文件并执行 `doctor`，备份并同步完整技能目录，将来源 SHA 写入 `skills/archify.upstream.json`，提交并推送自己的 `origin/main`，最后只刷新本机 Archify。重复运行不产生空提交；无需另跑安装脚本，也不会重装 tomd 或 litreview。
+
+- 需要 PowerShell 7、Git、Node.js，以及有效的 Git 提交身份和推送凭据；首次登录按 Git 提示完成。脚本不安装运行依赖。
+- 仓库须在 `main` 且没有未提交文件。未推送的无关提交会导致停止；仅由上次同步留下的提交允许重试推送。不强制推送或自动处理冲突。
+- 只备份和更新 Archify；更新发生时，备份路径在结果的 `Backup` 字段中。`Pushed: true` 表示已推送成功。推送失败会报错，已形成的同步提交可在凭据恢复后重跑脚本推送。
+- 需要固定上游版本时使用 `-UpstreamRef <tag或commit>`；自定义安装目录使用 `-SkillsRoot <目录>`。默认本机目标为 `.agents/skills/archify`。
+- Archify 自带的更新提示只负责提醒，不会替你同步本仓库。此脚本也不配置后台定时执行。
+
+同步脚本测试（仅推送到新建的临时本地 Git 仓库）：
+
+```powershell
+pwsh -NoProfile -File "$HOME\codex-settings\skills\tests\Sync-Archify.Tests.ps1" -TestRoot "<新的测试目录绝对路径>"
+```
+
+### 更新其他技能或获取仓库更新
+
 检查目标目录中三个技能的 `SKILL.md` 是否可读，链接是否指向当前仓库。分别用 `$tomd`、`$archify`、`$litreview` 完成小任务，确认所需运行依赖和外部连接可用。
 
 ```powershell

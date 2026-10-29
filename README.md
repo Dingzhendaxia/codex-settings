@@ -42,6 +42,8 @@ codex-settings/
 
 ## 更新与来源
 
+Archify 上游、本机技能及本仓库的一键同步：`pwsh -NoProfile -File "$HOME\codex-settings\skills\Sync-Archify.ps1"`。使用前需有 Git 推送权限，保持仓库干净；详细行为、版本固定和备份说明见 [技能更新指南](skills/README.md#一条命令同步-archify-上游本地和-github)。
+
 在本地仓库目录运行 `git pull --ff-only` 获取更新。各模块的依赖、安装方式、更新注意事项和来源链接见对应子目录说明。
 
 archify 保留其随附的许可证和第三方声明；tomd 基于 [Microsoft MarkItDown](https://github.com/microsoft/markitdown)；litreview 提供通用文献研究流程，课题配置与私人阅读状态留在本机；MATLAB 组件来自 MathWorks 官方仓库。本仓库不包含 MATLAB 本体、官方工具包二进制、实际用户配置、登录信息或密钥。
