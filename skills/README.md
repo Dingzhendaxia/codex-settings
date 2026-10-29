@@ -115,6 +115,8 @@ pwsh -NoProfile -File "$HOME\codex-settings\skills\Sync-Archify.ps1"
 - 需要固定上游版本时使用 `-UpstreamRef <tag或commit>`；自定义安装目录使用 `-SkillsRoot <目录>`。默认本机目标为 `.agents/skills/archify`。
 - Archify 自带的更新提示只负责提醒，不会替你同步本仓库。此脚本也不配置后台定时执行。
 
+命令保留 JSON 结果（`Updated` 表示本次是否创建更新提交），并在终端显示中文摘要，区分“已更新”和“已是最新”，同时列出 GitHub 同步状态、上游版本、本地技能和备份位置。中文提示写入信息流，不影响通过管道解析 JSON。
+
 同步脚本测试（仅推送到新建的临时本地 Git 仓库）：
 
 ```powershell

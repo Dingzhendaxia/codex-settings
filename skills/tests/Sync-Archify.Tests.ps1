@@ -43,7 +43,10 @@ Write-Text (Join-Path $work 'skills/archify/local.hidden') 'hidden local content
 $installed=Join-Path $TestRoot 'installed'
 Write-Text (Join-Path $installed 'other/SKILL.md') 'keep other skill'
 
-$firstResult=(& $sync -RepositoryRoot $work -UpstreamRepository $up -SkillsRoot $installed)|ConvertFrom-Json
+$firstOutput=@(& $sync -RepositoryRoot $work -UpstreamRepository $up -SkillsRoot $installed 6>&1)
+$firstResult=(($firstOutput|Where-Object { $_ -is [string] }) -join "`n")|ConvertFrom-Json
+Check ($firstResult.Updated -eq $true) 'Updated result not reported'
+Check (($firstOutput|Out-String) -match '已更新') 'Chinese update result missing'
 Check ([IO.File]::ReadAllText((Join-Path $firstResult.Backup 'previous-package/local.hidden')) -eq 'hidden local content') 'Hidden backup content lost'
 Check ([IO.File]::ReadAllText((Join-Path $work 'skills/archify/data.txt')) -eq 'version one') 'Package not synchronized'
 Check (!(Test-Path -LiteralPath (Join-Path $work 'skills/archify/obsolete.txt'))) 'Obsolete package file remains'
@@ -52,7 +55,10 @@ Check ((G $work @('rev-parse','HEAD')) -eq (G $remote @('rev-parse','main'))) 'C
 $lock=Get-Content -LiteralPath (Join-Path $work 'skills/archify.upstream.json') -Raw|ConvertFrom-Json
 Check ($lock.commit -eq (G $up @('rev-parse','HEAD'))) 'Upstream revision not recorded'
 $first=G $work @('rev-parse','HEAD')
-& $sync -RepositoryRoot $work -UpstreamRepository $up -SkillsRoot $installed
+$repeatOutput=@(& $sync -RepositoryRoot $work -UpstreamRepository $up -SkillsRoot $installed 6>&1)
+$repeatResult=(($repeatOutput|Where-Object { $_ -is [string] }) -join "`n")|ConvertFrom-Json
+Check ($repeatResult.Updated -eq $false) 'No-op incorrectly reported an update'
+Check (($repeatOutput|Out-String) -match '已是最新') 'Chinese no-op result missing'
 Check ((G $work @('rev-parse','HEAD')) -eq $first) 'No-op sync created a commit'
 
 Write-Text (Join-Path $up 'archify/data.txt') 'version two'
@@ -156,4 +162,4 @@ $rejected=$false
 try { & $sync -RepositoryRoot $work -UpstreamRepository $up -SkillsRoot $installed } catch { $rejected=$true }
 Check $rejected 'Unrelated ahead commit was not rejected'
 Check ((G $remote @('rev-parse','main')) -eq $last) 'Unrelated commit was published'
-[pscustomobject]@{ Passed=13; Checks=@('sync and push','obsolete file removed','revision recorded','idempotent no-op','version updates and local install','unrelated files preserved','invalid upstream rejected','hidden files backed up','partial deletion restored','partial copy restored and retry succeeds','merge-only unrelated work rejected','junction parent specifically rejected','dirty/ahead work rejected'); Artifacts=$TestRoot }|ConvertTo-Json -Depth 3
+[pscustomobject]@{ Passed=14; Checks=@('sync and push','Chinese update/no-op results preserve JSON pipeline','obsolete file removed','revision recorded','idempotent no-op','version updates and local install','unrelated files preserved','invalid upstream rejected','hidden files backed up','partial deletion restored','partial copy restored and retry succeeds','merge-only unrelated work rejected','junction parent specifically rejected','dirty/ahead work rejected'); Artifacts=$TestRoot }|ConvertTo-Json -Depth 3

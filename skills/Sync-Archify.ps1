@@ -129,7 +129,16 @@ try {
         try { New-Item -ItemType Junction -Path $installed -Target $package -ErrorAction Stop|Out-Null }
         catch { Copy-Item -LiteralPath $package -Destination $installed -Recurse -Force }
     }
-    [pscustomobject]@{ UpstreamCommit=$revision; RepositoryCommit=(Invoke-SyncGit $RepositoryRoot @('rev-parse','HEAD')); Pushed=$true; Package=$package; Skill=$installed; Backup=$(if ($keepBackup) { $temp } else { $null }) }|ConvertTo-Json
+    [pscustomobject]@{ UpstreamCommit=$revision; RepositoryCommit=(Invoke-SyncGit $RepositoryRoot @('rev-parse','HEAD')); Updated=[bool]$changes; Pushed=$true; Package=$package; Skill=$installed; Backup=$(if ($keepBackup) { $temp } else { $null }) }|ConvertTo-Json
+    # Keep the JSON success stream usable by scripts; human-readable text goes to the host.
+    Write-Host ''
+    if ($changes) { Write-Host '同步成功：Archify 已更新。' -ForegroundColor Green }
+    else { Write-Host '检查完成：Archify 已是最新，本次未创建新提交。' -ForegroundColor Green }
+    Write-Host "GitHub：已成功同步到 $Remote/$Branch。"
+    Write-Host "上游版本：$revision"
+    Write-Host "本地技能：$installed"
+    if ($keepBackup) { Write-Host "备份位置：$temp" }
+    else { Write-Host '备份：本次未产生备份。' }
 } finally {
     if (!$keepBackup -and (Test-Path -LiteralPath $temp)) {
         $resolved=(Resolve-Path -LiteralPath $temp).Path
