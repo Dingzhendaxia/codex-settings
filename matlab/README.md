@@ -1,6 +1,8 @@
-# MATLAB / Simulink 与 Codex（Windows）
+# Codex 与 MATLAB 三组件通用配置（Windows）
 
 目标：正常打开 MATLAB 后，由 startup 自动初始化 Simulink Agentic Toolkit 并共享会话；Codex 通过 MATLAB MCP Server 连接该会话。
+
+在另一台电脑配置时，可直接把[通用配置提示词](配置提示词.md)交给该电脑上的 Codex。完成后按[目标电脑验收清单](VERIFICATION.md)逐项验证。文档中的示例路径仅为占位符，需在目标电脑生成实际路径。
 
 本目录是独立新增模块，不改变仓库原有 archify、tomd 安装流程。仅保存说明和模板；官方组件从 MathWorks 官方仓库下载。
 
@@ -15,7 +17,7 @@ Windows x64；已安装 MATLAB R2023a 或更新版本及有效 Simulink 许可�
 | MATLAB MCP Server | v0.15.0 |
 | Simulink Agentic Toolkit | SATK-2026.10.c |
 
-本次在 R2026b 验证。迁移到其他版本时，先核对官方兼容性和资产可用性，不要静默替换版本。
+参考流程曾在 R2026b 验证；新电脑必须独立验收。迁移到其他版本时，先核对官方兼容性和资产可用性，不要静默替换版本。
 
 ## 1. 检测与备份
 
@@ -42,7 +44,7 @@ $matlabRoot = 'D:\path\to\MATLAB'
 & $installer status
 ```
 
---skip-configure 避免自动改动其他代理配置。默认安装根为 %APPDATA%\MathWorks\Agentic Toolkits\v1。若无权写入，可显式追加 --app-data 指定另一个持久目录；本次传入 C:\Users\wl\Documents\Codex\MathWorks-Agentic-Toolkits，实际根目录追加了 v1。后续 status 也传相同 --app-data。
+--skip-configure 避免自动改动其他代理配置。默认安装根为 %APPDATA%\MathWorks\Agentic Toolkits\v1。若无权写入，可显式追加 --app-data 指定另一个持久目录，实际根目录会追加 v1。后续 status 也传相同 --app-data。
 
 必须确认 bin/matlab-mcp-server.exe、两个 mltbx 和 toolkits 下的工具包文件存在。安装器即使返回0，也可能提示 Failed to install toolkits，必须查看输出和日志。
 
@@ -137,9 +139,9 @@ rehash; which('startup','-all'); startup;
 
 ## 故障经验
 
-本次受限终端能完成 MCP 握手和列工具，但实际执行报 failed to attach to MATLAB session。进一步发现 connector 端口可达，而读取 %APPDATA%\MathWorks\MATLAB MCP Server\v1\sessionDetails.json 被拒绝。该文件含会话凭据，不要输出、复制进仓库或提交。
+如果能列工具但实际执行报 failed to attach to MATLAB session，先确认 MATLAB 已打开并初始化，再检查 %APPDATA%\MathWorks\MATLAB MCP Server\v1\sessionDetails.json 的访问权限。该文件含会话凭据，不要输出、复制进仓库或提交。
 
-重启 Codex 后，其原生 MATLAB MCP 已成功执行查询和模型概览。遇到类似问题，检查运行环境、会话发现文件访问权和本机连接权限，按正常权限流程处理；不绕过审批。端口是动态值，不要固定31515。
+配置变更后，重启 Codex 或新建重新加载配置的本地聊天，再执行查询和模型概览验收。遇到类似问题，检查运行环境、会话发现文件访问权和本机连接权限，按正常权限流程处理；不绕过审批。端口是动态值，不要固定端口号。
 
 ## 官方资料
 
@@ -150,4 +152,4 @@ rehash; which('startup','-all'); startup;
 - [MATLAB startup](https://www.mathworks.com/help/matlab/ref/startup.html)
 - [Codex MCP](https://developers.openai.com/codex/mcp)
 
-本机实际结果见 [2026-10-26 验收记录](VERIFICATION-2026-10-26.md)。
+本目录不包含任何个人电脑的安装记录或会话凭据。

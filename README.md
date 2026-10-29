@@ -6,7 +6,7 @@
 
 新增内容见 [MATLAB 配置指南](matlab/README.md)：固定版本安装、17 个核心技能注册、MCP existing 会话配置、startup 自动初始化与实际验收。
 
-本机 2026-10-26 已通过 MATLAB 代码执行和 Simulink 模型概览验收，详见[验收记录](matlab/VERIFICATION-2026-10-26.md)。
+可在其他 Windows 电脑复用：将[通用配置提示词](matlab/配置提示词.md)交给目标电脑上的 Codex 执行。模板不含个人安装路径；实际配置由目标电脑检测并生成。完成后按[验收清单](matlab/VERIFICATION.md)逐项检查。
 
 ## 在另一台 Windows 电脑安装
 
