@@ -2,9 +2,9 @@
 
 目标：正常打开 MATLAB 后，由 startup 自动初始化 Simulink Agentic Toolkit 并共享会话；Codex 通过 MATLAB MCP Server 连接该会话。
 
-在另一台电脑配置时，可直接把[通用配置提示词](配置提示词.md)交给该电脑上的 Codex。完成后按[目标电脑验收清单](VERIFICATION.md)逐项验证。文档中的示例路径仅为占位符，需在目标电脑生成实际路径。
+在另一台电脑配置时，可直接把[通用配置提示词](配置提示词.md)交给该电脑上的 Codex。完成后按本文的[分层验收](#7-分层验收)逐项验证。文档中的示例路径仅为占位符，需在目标电脑生成实际路径。
 
-本目录是独立新增模块，不改变仓库原有 archify、tomd 安装流程。仅保存说明和模板；官方组件从 MathWorks 官方仓库下载。
+本目录只负责 MATLAB / Simulink 工作流的安装说明、配置模板和验收。独立的 tomd、archify 技能及安装脚本见 [skills 子项目](../skills/README.md)。官方组件从 MathWorks 官方仓库下载。
 
 ## 版本与前提
 

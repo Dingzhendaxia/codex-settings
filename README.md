@@ -1,43 +1,45 @@
 # Codex 配置与技能
 
-此仓库收录本机自装技能 `archify`、`tomd`，以及 MATLAB / Simulink 与 Codex 的配置流程和模板。不包含官方工具包二进制、实际 Codex 用户配置、登录信息或密钥。
+用于配置和扩展 Codex 的工作环境，收录文件阅读、可视化和 MATLAB / Simulink 工作流三个模块。配置说明使用通用路径或环境变量，方便在不同 Windows 电脑上复用。
 
-## MATLAB / Simulink 与 Codex
+## 模块导航
 
-新增内容见 [MATLAB 配置指南](matlab/README.md)：固定版本安装、17 个核心技能注册、MCP existing 会话配置、startup 自动初始化与实际验收。
+| 模块 | 用途 | 入口 |
+| --- | --- | --- |
+| tomd | 基于 Microsoft MarkItDown，将文档等输入转换为 Markdown，供 Codex 阅读、提取和总结 | [技能安装与使用](skills/README.md#tomd) |
+| archify | 开源可视化技能，生成可探索的 HTML 图表和说明页面 | [技能安装与使用](skills/README.md#archify) |
+| MATLAB / Simulink | 连接 Codex 与本机 MATLAB，配置三个 MathWorks 组件、核心技能和自动初始化 | [工作流配置指南](matlab/README.md) |
 
-可在其他 Windows 电脑复用：将[通用配置提示词](matlab/配置提示词.md)交给目标电脑上的 Codex 执行。模板不含个人安装路径；实际配置由目标电脑检测并生成。完成后按[验收清单](matlab/VERIFICATION.md)逐项检查。
+仓库包含两个独立技能目录，以及一个配套工作流模块。MATLAB 工作流所需的官方组件和技能通过官方安装器获取。
 
-## 在另一台 Windows 电脑安装
+## 目录结构
 
-在 PowerShell 中运行：
-
-```powershell
-git clone https://github.com/Dingzhendaxia/codex-settings.git "$HOME\codex-settings"
-$skillRoot = Join-Path $HOME '.agents\skills'
-New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
-$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-foreach ($name in 'archify', 'tomd') {
-    $source = Join-Path $HOME "codex-settings\skills\$name"
-    $target = Join-Path $skillRoot $name
-    if (!(Test-Path -LiteralPath (Join-Path $source 'SKILL.md'))) { throw "缺少 $name 技能文件" }
-    $old = Get-Item -LiteralPath $target -Force -ErrorAction SilentlyContinue
-    if ($old -and $old.LinkType -eq 'Junction' -and @($old.Target)[0] -eq $source) { continue }
-    if ($old) { Move-Item -LiteralPath $target -Destination "$target.backup-$stamp" }
-    try { New-Item -ItemType Junction -Path $target -Target $source -ErrorAction Stop | Out-Null }
-    catch { Copy-Item -LiteralPath $source -Destination $target -Recurse }
-    Write-Host "已安装 $name"
-}
+```text
+codex-settings/
+├── README.md                         # 项目总览
+├── .gitignore
+├── skills/                           # 独立技能及其安装入口
+│   ├── README.md
+│   ├── Install-Skills.ps1
+│   ├── tomd/
+│   └── archify/
+└── matlab/                           # MATLAB / Simulink 工作流
+    ├── README.md
+    ├── 配置提示词.md
+    ├── config.matlab.example.toml
+    ├── startup.m
+    └── finish_agentic_install.m
 ```
 
-这些命令直接在交互式 PowerShell 中执行，适用于禁止运行 `.ps1` 文件的执行策略。如果已有同名技能，会先改名备份。安装后重启 Codex。
+## 从哪里开始
 
-## 更新
+- 安装文件阅读或可视化技能：阅读 [skills/README.md](skills/README.md)，执行该目录中的安装脚本。
+- 在新电脑配置 MATLAB 工作流：将 [matlab/配置提示词.md](matlab/配置提示词.md) 中的提示词交给目标电脑上的 Codex，再按[配置指南中的分层验收](matlab/README.md#7-分层验收)验证。
 
-在每台电脑运行：
+两个子项目可独立使用。`skills` 安装脚本只注册 tomd 和 archify；MATLAB 的三个组件及 17 个核心技能按 `matlab` 指南单独配置。
 
-```powershell
-git -C "$HOME\codex-settings" pull --ff-only
-```
+## 更新与来源
 
-如果安装时成功建立了目录链接，拉取更新后技能会立即指向新文件。如果当时只能复制，请重新运行上面的安装命令段。不要向此仓库提交个人配置、令牌或私有文件。
+在本地仓库目录运行 `git pull --ff-only` 获取更新。各模块的依赖、安装方式、更新注意事项和来源链接见对应子目录说明。
+
+archify 保留其随附的许可证和第三方声明；tomd 基于 [Microsoft MarkItDown](https://github.com/microsoft/markitdown)；MATLAB 组件来自 MathWorks 官方仓库。本仓库不包含 MATLAB 本体、官方工具包二进制、实际用户配置、登录信息或密钥。

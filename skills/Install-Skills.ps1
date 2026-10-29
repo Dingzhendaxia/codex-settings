@@ -1,13 +1,13 @@
 param([string]$TargetRoot)
 
 $ErrorActionPreference = 'Stop'
-$repo = Split-Path -Parent $MyInvocation.MyCommand.Path
+$skillsRoot = $PSScriptRoot
 if (-not $TargetRoot) { $TargetRoot = Join-Path $HOME '.agents\skills' }
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
 
 foreach ($name in @('archify', 'tomd')) {
-    $source = Join-Path $repo "skills\$name"
+    $source = Join-Path $skillsRoot $name
     if (-not (Test-Path -LiteralPath (Join-Path $source 'SKILL.md'))) {
         throw "仓库中缺少技能：$name"
     }
