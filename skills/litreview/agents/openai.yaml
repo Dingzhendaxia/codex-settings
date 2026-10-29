@@ -1,0 +1,4 @@
+interface:
+  display_name: "LitReview"
+  short_description: "持续整理Zotero文献、归纳共性研究问题并支持不同课题的知识库迁移"
+  default_prompt: "使用 $litreview，更新当前课题文献与阅读队列，基于实际正文覆盖比较方法并发现新问题。"

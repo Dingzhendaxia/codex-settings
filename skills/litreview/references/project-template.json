@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "project_id": "new-topic",
+  "topic": "填写课题",
+  "project_root": "填写已授权课题目录",
+  "zotero": {
+    "library_scope": "personal",
+    "library_identity": "填写库身份",
+    "collection_names": [],
+    "include_subcollections": true
+  },
+  "anchor_sources": [],
+  "seed_questions": [],
+  "discover_additional_questions": true,
+  "paths": {
+    "sources": "wiki/sources",
+    "methods": "wiki/concepts",
+    "problems": "wiki/problems",
+    "state": "outputs/研究工作流/阅读状态.json",
+    "candidates": "outputs/研究工作流/问题候选.json",
+    "snapshots": "outputs/研究工作流/snapshots",
+    "registry": "文献登记.md",
+    "research_map": "研究地图.md",
+    "markdown_cache": "outputs/markitdown",
+    "markdown_manifest": "outputs/研究工作流/转换缓存.json"
+  },
+  "domain_reference": null,
+  "reading": {
+    "pdf_text_preference": "tomd_or_terminal_markitdown",
+    "reuse_verified_cache": true,
+    "read_mode": "search_then_segments",
+    "pdf_visual_check": "when_required",
+    "conversion_does_not_imply_reading": true
+  }
+}

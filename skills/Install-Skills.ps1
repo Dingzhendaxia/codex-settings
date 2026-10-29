@@ -1,12 +1,21 @@
+#Requires -Version 7.0
 param([string]$TargetRoot)
 
 $ErrorActionPreference = 'Stop'
 $skillsRoot = $PSScriptRoot
 if (-not $TargetRoot) { $TargetRoot = Join-Path $HOME '.agents\skills' }
+$TargetRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetRoot)
+$skillNames = @('archify', 'tomd', 'litreview')
+# Check the complete package before changing an existing installation.
+foreach ($name in $skillNames) {
+    if (-not (Test-Path -LiteralPath (Join-Path $skillsRoot "$name\SKILL.md") -PathType Leaf)) {
+        throw "仓库中缺少技能：$name"
+    }
+}
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
 
-foreach ($name in @('archify', 'tomd')) {
+foreach ($name in $skillNames) {
     $source = Join-Path $skillsRoot $name
     if (-not (Test-Path -LiteralPath (Join-Path $source 'SKILL.md'))) {
         throw "仓库中缺少技能：$name"
@@ -39,7 +48,13 @@ foreach ($name in @('archify', 'tomd')) {
                 }
             }
         }
-        $backup = "$target.backup-$stamp"
+        $backup = "$target.backup-$stamp-$([guid]::NewGuid().ToString('N').Substring(0,8))"
+        # Both move endpoints must remain direct children of the requested root.
+        foreach ($candidate in @($target, $backup)) {
+            if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($candidate)) -ne $TargetRoot.TrimEnd('\', '/')) {
+                throw "备份路径超出目标技能目录：$candidate"
+            }
+        }
         Move-Item -LiteralPath $target -Destination $backup
         Write-Host "已备份旧版 $name：$backup"
     }
